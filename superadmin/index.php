@@ -4,26 +4,18 @@ include "koneksi.php";
 
 session_start();
 
-$nama = $_SESSION["nama"];
 $username = $_SESSION["username"];
+$nama = $_SESSION["nama"];
 
-$sql = mysql_query(" SELECT * FROM ruangan");
-$cek = mysql_num_rows($sql);
-
-$sql1 = mysql_query(" SELECT * FROM peminjaman group by nomorRuang");
-$cek1 = mysql_num_rows($sql1);
-
-$sql2 = mysql_query(" SELECT * FROM jadwalkuliah group by nomorRuang");
-$cek2 = mysql_num_rows($sql2);
-
-if( empty($nama) ){
+if( empty($username) ){
   echo "
   <script>
     alert('Anda Harus Login Terlebih dahulu');
-    window.location = 'login_admin.html';
+    window.location = 'login_super_admin.html';
   </script>
   ";
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -37,14 +29,14 @@ if( empty($nama) ){
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" href="assets/images/ukdw.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/ukdw.png">
     <title>Biro 1 UKDW</title>
     <!-- Custom CSS -->
-    <link href="assets/extra-libs/c3/c3.min.css" rel="stylesheet">
-    <link href="assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
-    <link href="assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+    <link href="../assets/extra-libs/c3/c3.min.css" rel="stylesheet">
+    <link href="../assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
+    <link href="../assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
     <!-- Custom CSS -->
-    <link href="dist/css/style.min.css" rel="stylesheet">
+    <link href="../dist/css/style.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -85,9 +77,9 @@ if( empty($nama) ){
                         <a href="index.php">
                             <b class="logo-icon">
                                 <!-- Dark Logo icon -->
-                                <img src="assets/images/ukdw.png" width="45" height="60" alt="homepage" class="dark-logo" />
+                                <img src="../assets/images/ukdw.png" width="45" height="60" alt="homepage" class="dark-logo" />
                                 <!-- Light Logo icon -->
-                                <img src="assets/images/ukdw.png" width="45" height="60" alt="homepage" class="light-logo" />
+                                <img src="../assets/images/ukdw.png" width="45" height="60" alt="homepage" class="light-logo" />
                             </b>
                             <!--End Logo icon -->
                             <!-- Logo text -->
@@ -131,7 +123,7 @@ if( empty($nama) ){
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
-                                <img src="assets/images/users/1.jpg" alt="user" class="rounded-circle"
+                                <img src="../assets/images/users/1.jpg" alt="user" class="rounded-circle"
                                     width="40">
                                 <span class="ml-2 d-none d-lg-inline-block"><span>Hallo,</span> <span
                                         class="text-dark"><?php echo $nama; ?></span> <i data-feather="chevron-down"
@@ -170,25 +162,38 @@ if( empty($nama) ){
                         <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index.php"
                                 aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
                                     class="hide-menu">Dashboard</span></a></li>
+
+
                         <li class="list-divider"></li>
-                        <li class="nav-small-cap"><span class="hide-menu">Pemakaian Ruang</span></li>
+                        <li class="nav-small-cap"><span class="hide-menu">Kelola Data</span></li>
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index.php?page=data_admin"
+                                aria-expanded="false">Data Admin</a></li>
 
-                        <li class="sidebar-item"> <a class="sidebar-link" href="index.php?page=tambah_pemakaian_ruang"
-                                aria-expanded="false">Tambah Pemakaian Ruang</a>
-                        </li>
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index.php?page=data_pemakaian_ruang"
-                                aria-expanded="false">Data Pemakaian Ruang</a></li>
-                        <br>
-                        <li class="nav-small-cap"><span class="hide-menu">Peminjaman Ruang</span></li>
+                                
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index.php?page=data_prodi"
+                                aria-expanded="false">Data Prodi</a></li>
 
-                        <li class="sidebar-item"> <a class="sidebar-link" href="index.php?page=tambah_peminjaman_ruang"
-                                aria-expanded="false">Tambah Peminjaman Ruang</a>
-                        </li>
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index.php?page=data_ruangan_dipinjam"
-                                aria-expanded="false">Data Ruangan Dipinjam</a></li>
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index.php?page=data_peminjaman_ruang"
-                                aria-expanded="false">Cetak Laporan Peminjaman</a></li>
+                              
 
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index.php?page=data_sesi"
+                                aria-expanded="false">Data Sesi</a></li>
+
+                             
+                        
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index.php?page=data_ruangan"
+                                aria-expanded="false">Data Ruangan</a></li>
+
+                             
+
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index.php?page=data_matkul"
+                                aria-expanded="false">Data Mata Kuliah</a></li>
+
+                            
+                        
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="index.php?page=data_mahasiswa"
+                                aria-expanded="false">Data Mahasiswa</a></li>
+
+                                <br><br>
                         
                         
                             </ul>
@@ -212,7 +217,7 @@ if( empty($nama) ){
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-7 align-self-center">
-                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Selamat Datang Admin</h3>
+                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Selamat Datang Super Admin</h3>
                         <div class="d-flex align-items-center">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb m-0 p-0">
@@ -237,28 +242,6 @@ if( empty($nama) ){
                 <!-- *************************************************************** -->
                 <div class="card-group">
                     
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex d-lg-flex d-md-block align-items-center">
-                                <div>
-                                    <h2 class="text-dark mb-1 font-weight-medium"><?php echo $cek1; ?></h2>
-                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Ruangan Dipinjam</h6>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex d-lg-flex d-md-block align-items-center">
-                                <div>
-                                    <h2 class="text-dark mb-1 font-weight-medium"><?php echo $cek-$cek1-$cek2; ?></h2>
-                                    <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Ruangan Tersedia</h6>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div>
                 </div>
                 <!-- *************************************************************** -->
                 <!-- End First Cards -->
@@ -291,25 +274,25 @@ if( empty($nama) ){
     <!-- ============================================================== -->
     <!-- All Jquery -->
     <!-- ============================================================== -->
-    <script src="assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
-    <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="../assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- apps -->
     <!-- apps -->
-    <script src="dist/js/app-style-switcher.js"></script>
-    <script src="dist/js/feather.min.js"></script>
-    <script src="assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
-    <script src="dist/js/sidebarmenu.js"></script>
+    <script src="../dist/js/app-style-switcher.js"></script>
+    <script src="../dist/js/feather.min.js"></script>
+    <script src="../assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="../dist/js/sidebarmenu.js"></script>
     <!--Custom JavaScript -->
-    <script src="dist/js/custom.min.js"></script>
+    <script src="../dist/js/custom.min.js"></script>
     <!--This page JavaScript -->
-    <script src="assets/extra-libs/c3/d3.min.js"></script>
-    <script src="assets/extra-libs/c3/c3.min.js"></script>
-    <script src="assets/libs/chartist/dist/chartist.min.js"></script>
-    <script src="assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
-    <script src="assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
-    <script src="assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
-    <script src="dist/js/pages/dashboards/dashboard1.min.js"></script>
+    <script src="../assets/extra-libs/c3/d3.min.js"></script>
+    <script src="../assets/extra-libs/c3/c3.min.js"></script>
+    <script src="../assets/libs/chartist/dist/chartist.min.js"></script>
+    <script src="../assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <script src="../assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="../assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../dist/js/pages/dashboards/dashboard1.min.js"></script>
 </body>
 
 </html>

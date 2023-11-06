@@ -5,158 +5,165 @@ class database{
 	var $host = "localhost";
 	var $uname = "root";
 	var $pass = "";
-	var $db = "ayolapor";
+	var $db = "biro1";
 	
 	function __construct(){
 		mysql_connect($this->host, $this->uname, $this->pass);
 		mysql_select_db($this->db);
 	}
  
-	function tampil_data(){
-		$sql = mysql_query(" SELECT * FROM pengaduan ");
+	function tampil_data_ruang(){
+		$sql = mysql_query(" SELECT * FROM jadwalkuliah inner join matakuliah on jadwalkuliah.idMtk = matakuliah.idMtk
+								inner join ruangan on jadwalkuliah.nomorRuang = ruangan.nomorRuang
+								inner join sesi on jadwalkuliah.kodeSesi = sesi.kodeSesi
+		 ");
 		while($data = mysql_fetch_array($sql)){
 			$hasil[] = $data;
 		}
 		return $hasil;
 	}
-	function tampil_data_saya($nik){
-		$sql = mysql_query(" SELECT * FROM pengaduan WHERE nik = '$nik' ");
+	function tampil_data_dipinjam(){
+		$sql = mysql_query(" SELECT * FROM peminjaman inner join mahasiswa on peminjaman.nim = mahasiswa.nim
+								inner join ruangan on peminjaman.nomorRuang = ruangan.nomorRuang
+								inner join sesi on peminjaman.kodeSesi = sesi.kodeSesi
+		 ");
 		while($data = mysql_fetch_array($sql)){
 			$hasil[] = $data;
 		}
 		return $hasil;
 	}
-    function detail($id){
-		$sql = mysql_query(" SELECT * FROM pengaduan WHERE id_pengaduan = '$id' ");
-		$hasil[] = $data = mysql_fetch_array($sql);
-		
-		return $hasil;
-	}
-	function tanggapan($id){
-		$sql = mysql_query(" SELECT * FROM tanggapan WHERE id_pengaduan = '$id' ");
-		while($data = mysql_fetch_array($sql)){
-			$hasil[] = $data;
-		}
-		return $hasil;
-	}
-	function profile($nik){
+	function profile($username){
 
-		$sql = mysql_query(" SELECT * FROM masyarakat WHERE nik = '$nik' ");
+		$sql = mysql_query(" SELECT * FROM admin WHERE username = '$username' ");
 		$hasil[] = $data = mysql_fetch_array($sql);
 		
 		return $hasil;
 	}
 	function login($username,$password){
-        $sql = mysql_query("SELECT * FROM masyarakat WHERE username = '$username' AND password = '$password' ");
-$cek = mysql_num_rows($sql);
-$data = mysql_fetch_array($sql);
-
-session_start();
-$_SESSION["nama"] = $data["nama"];
-$_SESSION["nik"] = $data["nik"];
-
-if( $cek ) {
-    echo"
-    <script>
-        alert('Login Berhasil');
-        window.location.href='index.php';
-    </script>
-    
-    ";  
-}else{
-    echo"
-    <script>
-        alert('Maaf, Username atau Password yang anda inputkan salah');
-        window.location.href='login_masyarakat.html';
-    </script>
-    ";
-}
-	}
-	
-	function input($tanggal,$nik,$judul,$isi,$lokasi,$instansi,$kategori,$gambar){
+        $sql = mysql_query("SELECT * FROM admin WHERE username = '$username' AND password = '$password' AND level = 'Admin' ");
+		$cek = mysql_num_rows($sql);
+		$data = mysql_fetch_array($sql);
+			
 		session_start();
-		$nik = $_SESSION["nik"];
-		if( $_POST['kirim'] ){
-			if( empty($gambar) ){
-			   
-					mysql_query(" INSERT INTO pengaduan(tgl_pengaduan,nik,judul,isi_laporan,lokasi,instansi_tujuan,kategori,foto,status) 
-						VALUES ('$tanggal','$nik','$judul','$isi','$lokasi','$instansi','$kategori','no_picture.png','Telah Diajukan') ");
-					echo "
-					<script>
-						alert('Laporan Berhasil Diajukan');
-						window.location.href = 'index.php?page=buat_pengaduan';
-					</script>
-				";     
-	
-			}else{
-				
-				$ekstensi = array('png','jpg','gif','jpeg');
-				$x = explode('.', $gambar);
-				$exten = strtolower(end($x));
-				
-				if(in_array($exten, $ekstensi) === true){
-						$file_tmp = $_FILES['gambar']['tmp_name'];
-	
-						move_uploaded_file($file_tmp, 'gambar/'.$gambar);
-					
-						mysql_query(" INSERT INTO pengaduan(tgl_pengaduan,nik,judul,isi_laporan,lokasi,instansi_tujuan,kategori,foto,status) 
-						VALUES ('$tanggal','$nik','$judul','$isi','$lokasi','$instansi','$kategori','$gambar','Telah Diajukan') ");
-					echo "
-					<script>
-						alert('Laporan Berhasil Diajukan');
-						window.location.href = 'index.php?page=buat_pengaduan';
-					</script>
-				";  
-	
-					}else{
-						echo "
-						
-							<script>
-								alert('Maaf, Salah Ekstensi ');
-								window.location.href = 'index.php?page=buat_pengaduan';
-							</script>
-						";
-					}
-				
-			}
+		$_SESSION["nama"] = $data["nama"];
+		$_SESSION["username"] = $data["username"];
+			
+		if( $cek ) {
+		    echo"
+		    <script>
+		        alert('Login Berhasil');
+		        window.location.href='index.php';
+		    </script>
+		
+		    ";  
 		}else{
-			echo "
-	
-				<script>
-					alert('Maaf, Terjadi Kegagalan Sistem ');
-					window.location.href = 'index.php?page=buat_pengaduan';
-				</script>
-	
-			";
+		    echo"
+		    <script>
+		        alert('Maaf, Username atau Password yang anda inputkan salah');
+		        window.location.href='login_admin.html';
+		    </script>
+		    ";
 		}
 	}
-	function registrasi($nik,$nama,$username,$password,$telepon){
+	
+	function tambah_pemakaian_ruang($matkul,$tahun,$semester,$grup,$ruangan,$sesi){
+		$sql = mysql_query("SELECT * FROM jadwalkuliah WHERE idMtk = '$matkul' and tahun = '$tahun' and semester = '$semester' and grup = '$grup'");
+        $cek = mysql_num_rows($sql);
+
+		$sql1 = mysql_query("SELECT * FROM jadwalkuliah WHERE nomorRuang = '$ruangan' and kodeSesi = '$sesi'");
+        $cek1 = mysql_num_rows($sql1);
 
 
-$sql = mysql_query("SELECT * FROM masyarakat WHERE username = '$username' ");
-$cek = mysql_num_rows($sql);
+        if( $cek ) {
+            echo"
+            <script>
+                alert('Maaf, Jadwal Mata Kuliah Sudah Terdaftar');
+                window.location.href='index.php?page=tambah_pemakaian_ruang';
+            </script>
+            
+            ";  
+        }elseif( $cek1 ){
+			echo"
+            <script>
+                alert('Maaf, Ruangan Sudah Terpakai');
+                window.location.href='index.php?page=tambah_pemakaian_ruang';
+            </script>
+            
+            ";  
+		}
+		else{
+        
+                mysql_query("INSERT INTO jadwalkuliah(idMtk,tahun,semester,grup,nomorRuang,kodeSesi) VALUES('$matkul','$tahun','$semester','$grup','$ruangan','$sesi')");
+                echo"
+                <script>
+                    alert('Pendaftaran Jadwal Mata Kuliah Berhasil');
+                    window.location.href='index.php?page=tambah_pemakaian_ruang';
+                </script>
+                ";
+        
+            
+        }
+    }
+	function tambah_peminjaman_ruang($nim,$ruangan,$sesi,$tanggal,$keterangan){
 
-
-if( $cek ) {
-    echo"
+        mysql_query("INSERT INTO peminjaman(nim,nomorRuang,kodeSesi,keterangan,tglPinjam) VALUES('$nim','$ruangan','$sesi','$keterangan','$tanggal')");
+        echo"
+        <script>
+            alert('Peminjaman Berhasil !!');
+            window.location.href='index.php?page=tambah_peminjaman_ruang';
+        </script>
+        ";
+        
+            
+    }
+	function hapus_pemakaian_ruang($matkul,$tahun,$semester,$grup){
+		mysql_query(" DELETE FROM jadwalkuliah WHERE idMtk = '$matkul' and tahun = '$tahun' and semester = '$semester' and grup = '$grup' ");
+		echo"
     <script>
-        alert('Maaf, Username Sudah Terdaftar');
-        window.location.href='daftar.html';
+        alert('Data Berhasil Dihapus');
+        window.location.href='index.php?page=data_pemakaian_ruang';
     </script>
     
     ";  
-}else{
-
-        mysql_query("INSERT INTO masyarakat(nik,nama,username,password,telp) VALUES('$nik','$nama','$username','$password','$telepon')");
-        echo"
-        <script>
-            alert('Pendaftaran Akun Berhasil');
-            window.location.href='login_masyarakat.html';
-        </script>
-        ";
-   
+	}
+	function hapus_peminjaman_ruang($nim,$ruangan,$sesi){
+		mysql_query(" DELETE FROM peminjaman WHERE nim = '$nim' and nomorRuang = '$ruangan' and kodeSesi = '$sesi' ");
+		echo"
+    <script>
+        alert('Data Berhasil Dihapus');
+        window.location.href='index.php?page=data_ruangan_dipinjam';
+    </script>
     
-}
+    ";  
+	}
+	function registrasi($nama,$username,$password){
+
+
+		$sql = mysql_query("SELECT * FROM admin WHERE username = '$username' ");
+		$cek = mysql_num_rows($sql);
+			
+			
+		if( $cek ) {
+		    echo"
+		    <script>
+		        alert('Maaf, Username Sudah Terdaftar');
+		        window.location.href='daftar.html';
+		    </script>
+		
+		    ";  
+		}else{
+		
+		        mysql_query("INSERT INTO admin(nama,username,password) VALUES('$nama','$username','$password')");
+		
+		        echo"
+		        <script>
+		            alert('Pendaftaran Akun Berhasil');
+		            window.location.href='daftar.html';
+		        </script>
+		        ";
+		
+		
+		}	
 	}
     
 }

@@ -7,32 +7,39 @@ include "koneksi.php";
 	
 
         switch($page){
-            case "buat_pengaduan" :
-                include "buat_pengaduan.php";
-            break;
-            case "data_pengaduan" :
-                include "data_pengaduan.php";
-            break;
-            case "data_pengaduan_semua" :
-                include "data_pengaduan_semua.php";
-            break;
-            case "detail" :
-                include "detail.php";
-            break;
-            case "detail_saya" :
-                include "detail_saya.php";
-            break;
+            
             case "profile" :
                 include "profile.php";
             break;
-            case "tentang" :
-                include "tentang.php";
+
+            case "tambah_pemakaian_ruang" :
+                include "tambah_pemakaian_ruang.php";
             break;
-            case "tutorial" :
-                include "tutorial.php";
+            case "data_pemakaian_ruang" :
+                include "data_pemakaian_ruang.php";
             break;
+            case "ubah_pemakaian_ruang" :
+                include "ubah_pemakaian_ruang.php";
+            break;
+
+            case "tambah_peminjaman_ruang" :
+                include "tambah_peminjaman_ruang.php";
+            break;
+            case "data_ruangan_dipinjam" :
+                include "data_ruangan_dipinjam.php";
+            break;
+            case "data_peminjaman_ruang" :
+                include "data_peminjaman_ruang.php";
+            break;
+            case "ruangan_dicari" :
+                include "ruangan_dicari.php";
+            break;
+            case "mahasiswa_dicari" :
+                include "mahasiswa_dicari.php";
+            break;
+
             default:
-                echo "<center><h1 style='margin-top:16%;font-size:50px;'>Selamat Datang Masyarakat :)</h1></center>";
+                echo "<center><h1 style='margin-top:16%;font-size:50px;'>Selamat Datang Admin :)</h1></center>";
             break;
         }
 		

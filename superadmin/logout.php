@@ -4,7 +4,7 @@
     echo "
         <script>
             alert('Anda Telah Logout :)');
-            window.location.href = 'login_admin.html';
+            window.location.href = 'login_super_admin.html';
         </script>
     ";
 ?>
